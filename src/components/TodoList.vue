@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import TodoItem from "./TodoItem.vue";
 
 const newTodo = ref("");
 </script>
@@ -32,7 +33,7 @@ const newTodo = ref("");
     </div>
 
     <div class="space-y-4">
-      <span>list item</span>
+      <TodoItem />
     </div>
   </div>
 </template>
