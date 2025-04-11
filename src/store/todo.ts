@@ -42,8 +42,6 @@ export const useTodoStore = defineStore("todo", () => {
     if (todo) {
       todo.completed = !todo.completed;
     }
-
-    console.log(todos);
   }
 
   function update(id: string, value: string) {
