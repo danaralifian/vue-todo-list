@@ -1,14 +1,27 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import TodoItem from "./TodoItem.vue";
+import { FilterType } from "../enum/filter";
+import { useTodoStore } from "../store/todo";
 
+const filterTypes = Object.values(FilterType);
 const newTodo = ref("");
+const todoStore = useTodoStore();
+
+function handleSubmit(e: Event) {
+  e.preventDefault();
+  const value = newTodo.value.trim();
+
+  if (value) {
+    todoStore.addTodo(value);
+  }
+}
 </script>
 
 <template>
   <div class="max-w-2xl mx-auto px-4 py-8">
     <h1 class="text-3xl text-center font-bold text-gray-800 mb-8">Todo App</h1>
-    <form class="mb-6">
+    <form class="mb-6" @submit="handleSubmit">
       <input
         v-model="newTodo"
         type="text"
@@ -19,7 +32,7 @@ const newTodo = ref("");
 
     <div class="flex justify-center gap-4 mb-6">
       <button
-        v-for="filterType in ['all', 'active', 'completed']"
+        v-for="filterType in filterTypes"
         :key="filterType"
         :class="[
           'px-4 py-2 rounded-lg capitalize',
@@ -33,7 +46,17 @@ const newTodo = ref("");
     </div>
 
     <div class="space-y-4">
-      <TodoItem />
+      <TransitionGroup>
+        <TodoItem
+          v-for="todo in todoStore.filteredTodos"
+          :todo="todo"
+          :key="todo.id"
+          :onUpdated="() => {}"
+          :onTogle="() => {}"
+          :onDelete="() => {}"
+          :onUpdate="() => {}"
+        />
+      </TransitionGroup>
     </div>
   </div>
 </template>
