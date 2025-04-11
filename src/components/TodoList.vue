@@ -13,7 +13,8 @@ function handleSubmit(e: Event) {
   const value = newTodo.value.trim();
 
   if (value) {
-    todoStore.addTodo(value);
+    todoStore.add(value);
+    newTodo.value = "";
   }
 }
 </script>
@@ -34,9 +35,10 @@ function handleSubmit(e: Event) {
       <button
         v-for="filterType in filterTypes"
         :key="filterType"
+        @click="todoStore.filter = filterType"
         :class="[
           'px-4 py-2 rounded-lg capitalize',
-          'all' === filterType
+          todoStore.filter === filterType.toLowerCase()
             ? 'bg-blue-500 text-white'
             : 'bg-gray-200 text-gray-700 hover:bg-gray-300',
         ]"
@@ -46,17 +48,39 @@ function handleSubmit(e: Event) {
     </div>
 
     <div class="space-y-4">
-      <TransitionGroup>
+      <TransitionGroup name="list">
         <TodoItem
           v-for="todo in todoStore.filteredTodos"
           :todo="todo"
           :key="todo.id"
-          :onUpdated="() => {}"
-          :onTogle="() => {}"
-          :onDelete="() => {}"
-          :onUpdate="() => {}"
+          :onTogle="todoStore.completed"
+          :onDelete="todoStore.remove"
+          :onUpdate="todoStore.update"
         />
       </TransitionGroup>
     </div>
   </div>
 </template>
+
+<style scoped>
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.3s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.list-enter-to {
+  opacity: 1; /* Final opacity for entering items */
+  transform: translateX(0); /* Final position for entering items */
+}
+
+.list-leave {
+  opacity: 1; /* Start fully visible for leaving items */
+  transform: translateX(0); /* Start at original position for leaving items */
+}
+</style>

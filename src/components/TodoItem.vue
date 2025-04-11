@@ -36,16 +36,24 @@ function handleKeyDown(event: KeyboardEvent) {
 </script>
 <template>
   <div
-    class="p-4 bg-white rounded-lg shadow-sm group hover:shadow-md transition-shadow"
+    class="flex items-center gap-2 p-4 bg-white rounded-lg shadow-sm group hover:shadow-md transition-shadow"
   >
-    <div v-if="!isEditing" class="flex items-center gap-4">
-      <input
-        :checked="todo.completed"
-        @change="onTogle(todo.id)"
-        type="checkbox"
-        class="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-      />
-      <span class="text-base flex-1">todo item</span>
+    <input
+      :checked="todo.completed"
+      @change="onTogle(todo.id)"
+      type="checkbox"
+      class="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+    />
+    <div v-if="!isEditing" class="flex flex-1 items-center gap-4">
+      <span
+        :class="[
+          'text-base flex-1',
+          todo.completed ? 'line-through text-gray-400' : 'text-gray-700',
+        ]"
+        @dblclick="onClickEdit"
+      >
+        {{ todo.value }}
+      </span>
       <button
         @click="onClickEdit"
         class="opacity-0 group-hover:opacity-100 transition-opacity"
@@ -67,7 +75,17 @@ function handleKeyDown(event: KeyboardEvent) {
       @keydown="handleKeyDown"
       ref="input"
       v-focus
-      class=""
+      class="px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
     />
   </div>
 </template>
+
+<script lang="ts">
+export default {
+  directives: {
+    focus: {
+      mounted: (el: HTMLElement) => el.focus(),
+    },
+  },
+};
+</script>

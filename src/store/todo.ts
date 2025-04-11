@@ -6,11 +6,11 @@ import { FilterType } from "../enum/filter";
 
 export const useTodoStore = defineStore("todo", () => {
   const todos = useLocalStorage<Todo[]>("todos", []);
-  const filters = ref<FilterType>(FilterType.All);
+  const filter = ref<FilterType>(FilterType.All);
 
   const filteredTodos = computed(() => {
-    switch (filters.value) {
-      case FilterType.All:
+    switch (filter.value) {
+      case FilterType.Active:
         return todos.value.filter((todo) => !todo.completed);
       case FilterType.Completed:
         return todos.value.filter((todo) => todo.completed);
@@ -19,7 +19,7 @@ export const useTodoStore = defineStore("todo", () => {
     }
   });
 
-  function addTodo(value: string) {
+  function add(value: string) {
     const todo: Todo = {
       id: crypto.randomUUID(),
       value,
@@ -30,10 +30,36 @@ export const useTodoStore = defineStore("todo", () => {
     todos.value.unshift(todo);
   }
 
+  function remove(id: string) {
+    const index = todos.value.findIndex((todo) => todo.id === id);
+    if (index !== -1) {
+      todos.value.splice(index, 1);
+    }
+  }
+
+  function completed(id: string) {
+    const todo = todos.value.find((todo) => todo.id === id);
+    if (todo) {
+      todo.completed = !todo.completed;
+    }
+
+    console.log(todos);
+  }
+
+  function update(id: string, value: string) {
+    const todo = todos.value.find((todo) => todo.id === id);
+    if (todo) {
+      todo.value = value;
+    }
+  }
+
   return {
     todos,
-    filters,
+    filter,
     filteredTodos,
-    addTodo,
+    add,
+    remove,
+    completed,
+    update,
   };
 });
