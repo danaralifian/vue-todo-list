@@ -44,16 +44,16 @@ function handleKeyDown(event: KeyboardEvent) {
       type="checkbox"
       class="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
     />
-    <div v-if="!isEditing" class="flex flex-1 items-center gap-4">
-      <span
+    <div v-if="!isEditing" class="flex flex-1 w-full items-start gap-4">
+      <p
         :class="[
-          'text-base flex-1',
+          'text-base flex-1 break-words',
           todo.completed ? 'line-through text-gray-400' : 'text-gray-700',
         ]"
         @dblclick="onClickEdit"
       >
         {{ todo.value }}
-      </span>
+      </p>
       <button
         @click="onClickEdit"
         class="opacity-0 group-hover:opacity-100 transition-opacity"
